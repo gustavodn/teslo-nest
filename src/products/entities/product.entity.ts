@@ -5,49 +5,69 @@ import {
   BeforeUpdate,
   BeforeInsert,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { ProductImage } from './product_image.entity';
+import { User } from 'src/auth/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'products' })
 export class Product {
+  @ApiProperty({
+    example: 'uuid',
+    description: 'Product ID',
+    uniqueItems: true,
+  })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty({
+    example: 'T-shirt testlo ',
+    description: 'Product Title',
+    uniqueItems: false,
+  })
   @Column('text', {
     unique: true,
     nullable: true,
   })
   title: string;
 
+  @ApiProperty()
   @Column('numeric', {
     default: 0,
   })
   price: number;
 
+  @ApiProperty()
   @Column('text', {
     nullable: true,
   })
   description: string;
 
+  @ApiProperty()
   @Column('text', {
     unique: true,
     nullable: true,
   })
   slug: string;
 
+  @ApiProperty()
   @Column('int', {
     default: 0,
   })
   stock: number;
 
+  @ApiProperty()
   @Column('text', {
     array: true,
   })
   sizes: string[];
 
+  @ApiProperty()
   @Column('text')
   gender: string;
 
+  @ApiProperty()
   @Column({
     type: 'text',
     array: true,
@@ -60,6 +80,9 @@ export class Product {
     eager: true,
   })
   images?: ProductImage[];
+
+  @ManyToOne(() => User, (user) => user.product, { eager: true })
+  user: User;
 
   @BeforeInsert()
   @BeforeUpdate()

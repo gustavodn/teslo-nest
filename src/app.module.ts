@@ -10,11 +10,20 @@ import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { MessagesWsModule } from './messages-ws/messages-ws.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
+      // config for deployment
+      // ssl: process.env.stage === 'prod',
+      // extra: {
+      //   ssl: {
+      //     rejectUnauthorized: process.env.stage === 'prod',
+      //   },
+      // },
+
       type: 'postgres',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
@@ -32,6 +41,7 @@ import { AuthModule } from './auth/auth.module';
     SeedModule,
     FilesModule,
     AuthModule,
+    MessagesWsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

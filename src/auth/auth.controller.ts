@@ -17,7 +17,9 @@ import { UserRoleGuard } from './gurads/user-role/user-role.guard';
 import { RoleProtected } from './decorators/role-protected.decorator';
 import { validRoles } from './interfaces/valid-roles';
 import { Auth } from './decorators/auth.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -66,5 +68,11 @@ export class AuthController {
       message: 'This is a private route 3',
       user,
     };
+  }
+
+  @Get('check-auth-status')
+  @Auth()
+  checkAuthStatus(@GetUser() user: User) {
+    return this.authService.checkStatus(user);
   }
 }
